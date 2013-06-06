@@ -1,0 +1,28 @@
+{% load thumbnail %}
+<!-- 960x330 -->
+<section class="homepage-slider" id="home-slider">
+    <div class="flexslider">
+        <ul class="slides">
+            {% for carousel in carousel_list %}
+            <li>
+                <a href="{% if carousel.category %}
+                        {% url "catalog.views.category" carousel.category.slug %}{% elif carousel.product %}
+                        {% url "catalog.views.product" carousel.product.slug %}{% endif %}">
+                    {% thumbnail carousel.image "960x330" crop="center" as im %}
+                        <img src="{{ im.url }}" alt="{{ carousel.description }}"/>
+                    {% endthumbnail %}
+                </a>
+
+                <div class="intro">
+                    <p>
+
+                    <h1>{{ carousel.name }}</h1></p>
+                    {% if carousel.description %}
+                        <p><span>{{ carousel.description }}</span></p>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</section>

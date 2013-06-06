@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+{% load bootstrap_toolkit %}
+{% block title %} {{ current_category }} {% endblock %}
+{% block content %}
+    {% load i18n %}
+    <style>
+        .simpleCart_items table {
+            border: 1px solid #ccc;
+        }
+
+        .simpleCart_items th {
+            color: #333;
+            text-align: left;
+            padding: 10px 30px;
+            border-bottom: 1px solid #ccc;
+            background: #ededed;
+            background: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f7f7), color-stop(100%, #ededed));
+            background: -webkit-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+            background: -o-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+            background: -ms-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+            background: linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ededed', GradientType=0);
+        }
+
+        .simpleCart_items td {
+            padding: 10px 30px;
+            vertical-align: middle;
+            border-bottom: 1px solid #ccc;
+
+        }
+
+        .simpleCart_items td.item-image {
+            padding-left: 10px;
+            padding-right: 0px;
+        }
+
+        .item-image img {
+            width: 72px;
+        }
+
+        .item-name {
+            width: 50%;
+        }
+
+        .item-quantity,
+        .item-quantity input {
+            width: 30px;
+            text-align: center;
+        }
+
+        .item-price,
+        .item-subtotal {
+            width: 50px;
+        }
+    </style>
+    <div class="simpleCart_items"></div>
+    <br/>
+    <form name="order" method="post">
+        {% csrf_token %}
+        <div class="span6">
+            <legend>Your Personal Details</legend>
+            <div class="control-group">
+                <label class="control-label">Name</label>
+
+                <div class="controls docs-input-sizes">
+                    <input type="text" placeholder="" class="span4">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Email Address</label>
+
+                <div class="controls docs-input-sizes">
+                    <input type="text" placeholder="" class="span4">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Phone</label>
+
+                <div class="controls docs-input-sizes">
+                    <input type="text" placeholder="" class="span4">
+                </div>
+            </div>
+        </div>
+        <div class="span5">
+            <legend>Your Delivery Details</legend>
+            <div class="control-group">
+                <label class="control-label">Сarrier</label>
+
+                <div class="controls docs-input-sizes">
+                    <select name="carrier" style="width: 300px">
+                        <option selected="selected">Новая Почта</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls docs-input-sizes">
+                    <input type="hidden" name="city" style="width: 300px" data-placeholder="Выберите населенный пункт"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls docs-input-sizes">
+                    <input type="hidden" name="office" style="width: 300px" data-placeholder="Выберите склад..."/>
+                </div>
+            </div>
+        </div>
+        <div class="span11">
+            <button type="submit" class="btn btn-primary primary">{% trans "Submit" %}</button>
+        </div>
+    </form>
+    {# todo: remove this hack #}
+    <br style="clear: both"/>
+    <script>
+        simpleCart({
+            //Setting the Cart Columns for the sidebar cart display.
+            cartColumns: [
+                { attr: "image", label: false, view: "image"},
+                //Name of the item
+                { attr: "name", label: "{% trans "Name" %}" },
+                //Quantity displayed as an input
+                { attr: "quantity", label: "{% trans "Quantity" %}", view: "input"},
+                //Built in view for a remove link
+                { view: 'remove', text: "{% trans "Remove" %}", label: false},
+                //Price of item
+                { attr: "price", label: "{% trans "Price" %}"},
+                //Subtotal of that row (quantity of that item * the price)
+                { attr: "total", label: "{% trans "Subtotal" %}", view: "currency"  }
+            ],
+            cartStyle: "table"
+        });
+
+        $(function () {
+            $('form[name="order"]').submit(function (event) {
+                var orderItems = []
+                simpleCart.each(function (item, x) {
+                    orderItems.push({product: item.get('product'), quantity: item.get('quantity')})
+                });
+                $("input[name='items']").val(JSON.stringify(orderItems, null, 2));
+            });
+        });
+
+        function formatCity(data) {
+            return data.name + ' (' + data.region + ')'
+        }
+
+        function formatOffice(data) {
+            return data.name + ' (' + data.address + ')'
+        }
+
+        $('select[name=carrier]').select2();
+        $('input[name=city]').select2(
+                {
+                    width: 'copy',
+                    ajax: {
+                        url: "/novaposhta/city/",
+                        dataType: 'json',
+                        data: function (term, page) {
+                            return {
+                                q: $.trim(term)
+                            };
+                        },
+                        results: function (data, page) { // parse the results into the format expected by Select2.
+                            // since we are using custom formatting functions we do not need to alter remote JSON data
+                            return {results: data};
+                        }
+                    },
+                    formatResult: formatCity,
+                    formatSelection: formatCity
+                }
+        ).on("change",
+                function (e) {
+                    $('input[name=office]').select2(
+                            {
+                                width: 'copy',
+                                ajax: {
+                                    url: "/novaposhta/office/" + e.val + '/',
+                                    dataType: 'json',
+                                    data: function (term, page) {
+                                        return {
+                                            q: term
+                                        };
+                                    },
+                                    results: function (data, page) { // parse the results into the format expected by Select2.
+                                        // since we are using custom formatting functions we do not need to alter remote JSON data
+                                        return {results: data};
+                                    }
+                                },
+                                formatResult: formatOffice,
+                                formatSelection: formatOffice
+                            }
+                    );
+                    setTimeout(function(){
+                        $('input[name=office]').focus();
+                    }, 10);
+                });
+    </script>
+{% endblock %}

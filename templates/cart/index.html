@@ -1,0 +1,90 @@
+{% extends "../base.html" %}
+{% block title %} {{ current_category }} {% endblock %}
+{% block content %}
+{% load i18n %}
+    <section>
+        <style>
+            .simpleCart_items table {
+                border: 1px solid #ccc;
+            }
+
+            .simpleCart_items th {
+                color: #333;
+                text-align: left;
+                padding: 10px 30px;
+                border-bottom: 1px solid #ccc;
+                background: #ededed;
+                background: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f7f7), color-stop(100%, #ededed));
+                background: -webkit-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+                background: -o-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+                background: -ms-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+                background: linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#f7f7f7', endColorstr = '#ededed', GradientType = 0);
+            }
+
+            .simpleCart_items td {
+                padding: 10px 30px;
+                vertical-align: middle;
+                border-bottom: 1px solid #ccc;
+
+            }
+
+            .simpleCart_items td.item-image{
+                padding-left: 10px;
+                padding-right: 0px;
+            }
+            .item-image img {
+                width: 72px;
+            }
+
+            .item-name {
+                width: 50%;
+            }
+
+            .item-quantity,
+            .item-quantity input {
+                width: 30px;
+                text-align: center;
+            }
+
+            .item-price,
+            .item-subtotal {
+                width: 50px;
+            }
+        </style>
+        <div class="simpleCart_items"></div>
+
+        <form method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="{% trans "Submit" %}"/>
+        </form>
+
+    </section>
+    <script>
+        simpleCart({
+            checkout: {
+                type: "PayPal",
+                email: "you@yours.com"
+            },
+            //Setting the Cart Columns for the sidebar cart display.
+            cartColumns: [
+                { attr: "image", label: false, view: "image"},
+                //Name of the item
+                { attr: "name" , label: "{% trans "Name" %}" },
+                //Quantity displayed as an input
+                { attr: "quantity", label: "{% trans "Quantity" %}", view: "input"},
+                //Built in view for a remove link
+                { view:'remove', text: "{% trans "Remove" %}", label: false},
+                //Price of item
+                { attr: "price", label: "{% trans "Price" %}" },
+                //Subtotal of that row (quantity of that item * the price)
+                { attr: "total" , label: "{% trans "Subtotal" %}", view: "currency"  }
+            ],
+            cartStyle: "table"
+        });
+        simpleCart.bind( "afterAdd" , function( item ){
+            console.log( item.get("name") + " was added to the cart!" );
+        });
+    </script>
+{% endblock %}

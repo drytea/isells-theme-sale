@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load i18n apptags %}
+{% load thumbnail %}
+{% block title %} {{ current_category }} {% endblock %}
+{% block content %}
+
+    <!--<div class="row">
+        <div class="span12">
+            {% include "catalog/block/breadcrumb.html" %}
+        </div>
+    </div>-->
+
+    <section class="header_text sub">
+        <h4><span>// {{ current_category }}</span></h4>
+        Sit voluptatem accusantium doloremque laudantium
+    </section>
+
+    <section class="main-content">
+        <div class="row">
+            <div class="span9">
+                {% if product_list %}
+                    <ul class="thumbnails listing-products">
+                        {% for product in product_list %}
+                            <li class="span3">
+                                <div class="product-box">
+                                    <span class="sale_tag"></span>
+                                    <a href="{% url "catalog.views.product" product.slug %}">
+                                        {% if product.image %}
+                                            {% thumbnail product.image "220x200" crop="center" as im %}
+                                                <img class="item_image" alt="{{ product }}"
+                                                     src="{{ im.url }}">
+                                            {% endthumbnail %}
+                                        {% else %}
+                                            <img class="item_image" alt="{{ product }}"
+                                                 src="http://placehold.it/220x200">
+                                        {% endif %}
+                                    </a><br>
+                                    <a href="{% url "catalog.views.product" product.slug %}"
+                                       class="title">{{ product }}</a><br>
+                                    <a href="#"
+                                       class="category">{{ product.description|striptags|safe|truncatechars:25 }}</a>
+
+                                    <p class="price">{{ product.price|money }}</p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <hr>
+                    {% ifnotequal product_list.paginator.num_pages 1 %}
+                        <div class="pagination pagination-small pagination-centered">
+                            <ul>
+                                {% if product_list.has_previous %}
+                                    <li><a href="?page={{ product_list.previous_page_number }}">Prev</a></li>
+                                {% endif %}
+
+                                {% for page in product_list.paginator.page_range %}
+                                    {% ifequal page product_list.number %}
+                                        <!-- Do something special for this page -->
+                                        <li class="active"><a href="#">{{ page }}</a></li>
+                                    {% else %}
+                                        <!-- All the other pages -->
+                                        <li><a href="?page={{ page }}">{{ page }}</a></li>
+                                    {% endifequal %}
+                                {% endfor %}
+
+                                {% if product_list.has_next %}
+                                    <li><a href="?page={{ product_list.next_page_number }}">Next</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    {% endifnotequal %}
+
+                {% else %}
+                    <p>No products are available.</p>
+                {% endif %}
+            </div>
+            <div class="span3 col">
+                <div class="block">
+                    {% if current_category.get_children %}
+                        <ul class="nav nav-list">
+                            <li class="nav-header">{% trans "Sub categories" %}</li>
+                            {% for node in current_category.get_children %}
+                                <li>
+                                    <a class="active" href="{% url "catalog.views.category" node.slug %}">{{ node }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <br>
+                    {% endif %}
+                    <ul class="nav nav-list below">
+                        <li class="nav-header">{% trans "Manufactures" %}</li>
+                        <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Adidas</a></li>
+                        <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Nike</a></li>
+                        <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Dunlop</a></li>
+                        <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Yamaha</a></li>
+                    </ul>
+                </div>
+                <div class="block">
+                    <h4 class="title">
+                        <span class="pull-left"><span class="text">{% trans "Randomize" %}</span></span>
+								<span class="pull-right">
+									<a class="left button" href="#myCarousel" data-slide="prev"></a><a
+                                        class="right button" href="#myCarousel" data-slide="next"></a>
+								</span>
+                    </h4>
+
+                    <div id="myCarousel" class="carousel slide">
+                        <div class="carousel-inner">
+                            <div class="active item">
+                                <ul class="thumbnails listing-products">
+                                    <li class="span3">
+                                        <div class="product-box">
+                                            <span class="sale_tag"></span>
+                                            <img alt="" src="category_files/project_img6.jpg"><br>
+                                            <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
+                                               class="title">Fusce id molestie massa</a><br>
+                                            <a href="#" class="category">Suspendisse aliquet</a>
+
+                                            <p class="price">$261</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="item">
+                                <ul class="thumbnails listing-products">
+                                    <li class="span3">
+                                        <div class="product-box">
+                                            <img alt="" src="category_files/project_img3.jpg"><br>
+                                            <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
+                                               class="title">Tempor sem sodales</a><br>
+                                            <a href="#" class="category">Urna nec lectus mollis</a>
+
+                                            <p class="price">$134</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block">
+                    <h4 class="title"><strong>{% trans "Best" %}</strong> {% trans "Seller" %}</h4>
+                    <ul class="small-product">
+                        <li>
+                            <a href="#" title="Praesent tempor sem sodales">
+                                <img src="category_files/m2.jpg" alt="Praesent tempor sem sodales">
+                            </a>
+                            <a href="#">Praesent tempor sem</a>
+                        </li>
+                        <li>
+                            <a href="#" title="Luctus quam ultrices rutrum">
+                                <img src="category_files/m4.jpg" alt="Luctus quam ultrices rutrum">
+                            </a>
+                            <a href="#">Luctus quam ultrices rutrum</a>
+                        </li>
+                        <li>
+                            <a href="#" title="Fusce id molestie massa">
+                                <img src="category_files/m3.jpg" alt="Fusce id molestie massa">
+                            </a>
+                            <a href="#">Fusce id molestie massa</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
