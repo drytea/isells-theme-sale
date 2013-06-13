@@ -2,269 +2,331 @@
 {% load i18n apptags thumbnail sekizai_tags %}
 {% block title %} {{ product }} {% endblock %}
 {% block content %}
-    <section class="header_text sub">
-        <h4><span>// Product Detail</span></h4>
-        {{ product.name }}
-    </section>
-    <section class="main-content simpleCart_shelfItem">
-    <div class="row">
-    <div class="span9">
-        <div class="row">
-            <div class="span4">
-                {% if product.image %}
-                    <a href="{{ MEDIA_URL }}{{ product.image }}" class="thumbnail"
-                       data-fancybox-group="group1" title="{{ product }}"><img alt="{{ product.name }}"
-                                                                               class="item_image"
-                                                                               src="{{ MEDIA_URL }}{{ product.image }}"></a>
-                {% else %}
-                    <img alt="{{ product }}" class="item_image" src="http://placehold.it/300x300">
-                {% endif %}
-                <ul class="thumbnails small">
-                    {% for product_media in product.productmedia_set.all %}
-                        {% if not product_media.is_main %}
-                            <li class="span1">
-                                <a data-fancybox-group="group1" class="thumbnail"
-                                   href="{{ MEDIA_URL }}{{ product_media.image }}"
-                                   title="{{ product_media.description }}">
-                                    <img src="{{ MEDIA_URL }}{{ product_media.image }}"
-                                         alt="{{ product_media.description }}">
-                                </a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="span5">
-                <span class="item_name" style="display: none">{{ product.name }}</span>
-                <address>
-                    <strong>{% trans "Brand:" %}</strong> <span>Apple</span><br>
-                    <strong>{% trans "Product Code:" %}</strong> <span>Product 14</span><br>
-                    <strong>{% trans "Reward Points:" %}</strong> <span>0</span><br>
-                    <strong>{% trans "Availability:" %}</strong> <span>{% trans "Out Of Stock" %}</span><br>
-                </address>
-                <h4><strong class="item_price">{% trans "Price:" %} {{ product.price|money }}</strong></h4>
-            </div>
-            <div class="span5">
-                <form class="form-inline">
-                    <label class="checkbox">
-                        <input value="" type="checkbox"> Option one is this and that
-                    </label>
-                    <br>
-                    <label class="checkbox">
-                        <input value="" type="checkbox"> Be sure to include why it's great
-                    </label>
+<section class="header_text sub">
+    <h4><span>// Product Detail</span></h4>
+    {{ product.name }}
+</section>
+<section class="main-content simpleCart_shelfItem">
+<div class="row">
+<div class="span9">
+<div class="row">
+    <div class="span4">
+        {% if product.image %}
+        <a href="{{ MEDIA_URL }}{{ product.image }}" class="thumbnail"
+           data-fancybox-group="group1" title="{{ product }}"><img alt="{{ product.name }}"
+                                                                   class="item_image"
+                                                                   src="{{ MEDIA_URL }}{{ product.image }}"></a>
+        {% else %}
+        <img alt="{{ product }}" class="item_image" src="http://placehold.it/300x300">
+        {% endif %}
+        <ul class="thumbnails small">
+            {% for product_media in product.productmedia_set.all %}
+            {% if not product_media.is_main %}
+            <li class="span1">
+                <a data-fancybox-group="group1" class="thumbnail"
+                   href="{{ MEDIA_URL }}{{ product_media.image }}"
+                   title="{{ product_media.description }}">
+                    <img src="{{ MEDIA_URL }}{{ product_media.image }}"
+                         alt="{{ product_media.description }}">
+                </a>
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="span5">
+        <span class="item_name" style="display: none">{{ product.name }}</span>
+        <address>
+            <strong>{% trans "Brand:" %}</strong> <span>Apple</span><br>
+            <strong>{% trans "Product Code:" %}</strong> <span>Product 14</span><br>
+            <strong>{% trans "Reward Points:" %}</strong> <span>0</span><br>
+            <strong>{% trans "Availability:" %}</strong> <span>{% trans "Out Of Stock" %}</span><br>
+        </address>
+        <h4><strong class="item_price">{% trans "Price:" %} {{ product.price|money }}</strong></h4>
+    </div>
+    <div class="span5">
+        <form class="form-inline">
+            <label class="checkbox">
+                <input value="" type="checkbox"> Option one is this and that
+            </label>
+            <br>
+            <label class="checkbox">
+                <input value="" type="checkbox"> Be sure to include why it's great
+            </label>
 
-                    <p>&nbsp;</p>
-                    <label>{% trans "Qty:" %}</label>
-                    <input class="span1 item_Quantity" placeholder="1" type="text">
-                    <button class="btn btn-inverse item_add" type="submit">{% trans "Add to cart" %}</button>
-                </form>
-            </div>
+            <p>&nbsp;</p>
+            <label>{% trans "Qty:" %}</label>
+            <input class="span1 item_Quantity" placeholder="1" type="text">
+            <button class="btn btn-inverse item_add" type="submit">{% trans "Add to cart" %}</button>
+        </form>
+    </div>
+</div>
+<div class="row">
+<div class="span9">
+    <ul class="nav nav-tabs" id="myTab">
+        <li class="active"><a href="#home">{% trans "Description" %}</a></li>
+        <li class=""><a href="#profile">{% trans "Additional Information" %}</a></li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane active" id="home">
+            {% autoescape off %}
+            {{ product.description }}
+            {% endautoescape %}
         </div>
-        <div class="row">
-            <div class="span9">
-                <ul class="nav nav-tabs" id="myTab">
-                    <li class="active"><a href="#home">{% trans "Description" %}</a></li>
-                    <li class=""><a href="#profile">{% trans "Additional Information" %}</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="home">
-                        {% autoescape off %}
-                            {{ product.description }}
-                        {% endautoescape %}
-                    </div>
-                    <div class="tab-pane" id="profile">
-                        <table class="table table-striped shop_attributes">
-                            <tbody>
-                            <tr class="">
-                                <th>Size</th>
-                                <td>Large, Medium, Small, X-Large</td>
-                            </tr>
-                            <tr class="alt">
-                                <th>Colour</th>
-                                <td>Orange, Yellow</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+        <div class="tab-pane" id="profile">
+            <table class="table table-striped shop_attributes">
+                <tbody>
+                <tr class="">
+                    <th>Size</th>
+                    <td>Large, Medium, Small, X-Large</td>
+                </tr>
+                <tr class="alt">
+                    <th>Colour</th>
+                    <td>Orange, Yellow</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-            {% if product_list %}
-                <div class="span9">
-                    <br>
-                    <h4 class="title">
+{% if product_list %}
+<div class="span9">
+    <br>
+    <h4 class="title">
                         <span class="pull-left"><span
                                 class="text"><strong>{% trans "Related" %}</strong> {% trans "Products" %}</span></span>
                                             <span class="pull-right">
                                                 <a class="left button" href="#myCarousel-1" data-slide="prev"></a><a
                                                     class="right button" href="#myCarousel-1" data-slide="next"></a>
                                             </span>
-                    </h4>
+    </h4>
 
-                    <div id="myCarousel-1" class="carousel slide">
-                        <div class="carousel-inner">
-                            {% for product in product_list %}
-                                {% if forloop.first %}
-                                    <div class="active item">
-                                    <ul class="thumbnails">
+    <div id="myCarousel-1" class="carousel slide">
+        <div class="carousel-inner">
+            {% for product in product_list %}
+            {% if forloop.first %}
+            <div class="active item">
+                <ul class="thumbnails">
+                    {% endif %}
+                    <li class="span3">
+                        <div class="product-box">
+                            <span class="sale_tag"></span>
+
+                            <p><a href="{% url " catalog.views.product" product.slug %}">
+                                {% if product.image %}
+                                {% thumbnail product.image "220x200" crop="center" as im %}
+                                <img src="{{ im.url }}">
+                                {% endthumbnail %}
+                                {% else %}
+                                <img class="item_image" alt="{{ product }}"
+                                     src="http://placehold.it/220x200">
                                 {% endif %}
-                            <li class="span3">
-                                <div class="product-box">
-                                    <span class="sale_tag"></span>
+                                </a></p>
+                            <a href="{% url " catalog.views.product" product.slug %}"
+                            class="title">{{ product }}</a><br/>
+                            <a href="{% url " catalog.views.product" product.slug %}"
+                            class="category">{{ product.description|striptags|safe|truncatechars:25 }}</a>
 
-                                    <p><a href="{% url "catalog.views.product" product.slug %}">
-                                        {% if product.image %}
-                                            {% thumbnail product.image "220x200" crop="center" as im %}
-                                                <img src="{{ im.url }}">
-                                            {% endthumbnail %}
-                                        {% else %}
-                                            <img class="item_image" alt="{{ product }}"
-                                                 src="http://placehold.it/220x200">
-                                        {% endif %}
-                                    </a></p>
-                                    <a href="{% url "catalog.views.product" product.slug %}"
-                                       class="title">{{ product }}</a><br/>
-                                    <a href="{% url "catalog.views.product" product.slug %}"
-                                       class="category">{{ product.description|striptags|safe|truncatechars:25 }}</a>
-
-                                    <p class="price">{{ product.price|money }}</p>
-                                </div>
-                            </li>
-                            {% if forloop.last %}
-                                </ul></div>
-                            {% elif forloop.counter|divisibleby:4 %}
-                                </ul></div>
-                                <div class="item">
-                                <ul class="thumbnails">
-                            {% endif %}
-                            {% endfor %}
-                            </div>
-                    </div>
-                </div>
-            {% endif %}
+                            <p class="price">{{ product.price|money }}</p>
+                        </div>
+                    </li>
+                    {% if forloop.last %}
+                </ul>
+            </div>
+            {% elif forloop.counter|divisibleby:4 %}
+            </ul></div>
+        <div class="item">
+            <ul class="thumbnails">
+                {% endif %}
+                {% endfor %}
         </div>
     </div>
-    <div class="span3 col">
-        <div class="block">
-            {% if current_category.get_children %}
-                <ul class="nav nav-list">
-                    <li class="nav-header">{% trans "Sub categories" %}</li>
-                    {% for node in current_category.get_children %}
-                        <li>
-                            <a class="active" href="{% url "catalog.views.category" node.slug %}">{{ node }}</a>
-                        </li>
-                    {% endfor %}
+</div>
+{% endif %}
+
+<!-- related products -->
+{% if product.related_products.all %}
+<div class="span9">
+    <br>
+    <h4 class="title">
+        <span class="pull-left"><span class="text"><strong>{% trans "Related" %}</strong> {% trans "Products" %}</span></span>
+									<span class="pull-right">
+										<a class="left button" href="#myCarousel-1" data-slide="prev"></a><a
+                                            class="right button" href="#myCarousel-1" data-slide="next"></a>
+									</span>
+    </h4>
+
+
+    <div id="myCarousel-1" class="carousel slide">
+        <div class="carousel-inner">
+            {% for related_product in product.related_products.all %}
+            {% if forloop.first %}
+            <div class="active item">
+                <ul class="thumbnails listing-products">
+                    {% endif %}
+                    <li class="span3">
+                        <div class="product-box">
+                            <span class="sale_tag"></span>
+
+                            <p><a href="{% url "catalog.views.product" related_product.slug %}">
+                                {% if related_product.image %}
+                                {% thumbnail related_product.image "220x200" crop="center" as im %}
+                                <img src="{{ im.url }}">
+                                {% endthumbnail %}
+                                {% else %}
+                                <img class="item_image" alt="{{ related_product }}"
+                                     src="http://placehold.it/220x200">
+                                {% endif %}
+                                </a></p>
+                            <a href="{% url "catalog.views.product" related_product.slug %}"
+                            class="title">{{ product }}</a><br/>
+                            <a href="{% url "catalog.views.product" related_product.slug %}"
+                            class="category">{{ related_product.description|striptags|safe|truncatechars:25 }}</a>
+
+                            <p class="price">{{ related_product.price|money }}</p>
+                        </div>
+                    </li>
+                    {% if forloop.last %}
                 </ul>
-                <br>
-            {% endif %}
-            <ul class="nav nav-list below">
-                <li class="nav-header">{% trans "Manufactures" %}</li>
-                <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Adidas</a></li>
-                <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Nike</a></li>
-                <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Dunlop</a></li>
-                <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Yamaha</a></li>
-            </ul>
+            </div>
+            {% elif forloop.counter|divisibleby:3 %}
+            </ul></div>
+        <div class="item">
+            <ul class="thumbnails">
+                {% endif %}
+                {% endfor %}
         </div>
-        <div class="block">
-            <h4 class="title">
-                <span class="pull-left"><span class="text">{% trans "Randomize" %}</span></span>
+    </div>
+
+</div>
+{% endif %}
+<!-- end related products -->
+
+</div>
+
+
+</div>
+<div class="span3 col">
+    <div class="block">
+        {% if current_category.get_children %}
+        <ul class="nav nav-list">
+            <li class="nav-header">{% trans "Sub categories" %}</li>
+            {% for node in current_category.get_children %}
+            <li>
+                <a class="active" href="{% url " catalog.views.category" node.slug %}">{{ node }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <br>
+        {% endif %}
+        <ul class="nav nav-list below">
+            <li class="nav-header">{% trans "Manufactures" %}</li>
+            <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Adidas</a></li>
+            <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Nike</a></li>
+            <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Dunlop</a></li>
+            <li><a href="http://www.dichotaigia.com/themes/sale_shop/products.html">Yamaha</a></li>
+        </ul>
+    </div>
+    <div class="block">
+        <h4 class="title">
+            <span class="pull-left"><span class="text">{% trans "Randomize" %}</span></span>
 								<span class="pull-right">
 									<a class="left button" href="#myCarousel" data-slide="prev"></a><a
                                         class="right button" href="#myCarousel" data-slide="next"></a>
 								</span>
-            </h4>
+        </h4>
 
-            <div id="myCarousel" class="carousel slide">
-                <div class="carousel-inner">
-                    <div class="active item">
-                        <ul class="thumbnails listing-products">
-                            <li class="span3">
-                                <div class="product-box">
-                                    <span class="sale_tag"></span>
-                                    <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"><img
-                                            alt="" src="product_files/project_img6.jpg"></a><br>
-                                    <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
-                                       class="title">Fusce id molestie massa</a><br>
-                                    <a href="#" class="category">Suspendisse aliquet</a>
+        <div id="myCarousel" class="carousel slide">
+            <div class="carousel-inner">
+                <div class="active item">
+                    <ul class="thumbnails listing-products">
+                        <li class="span3">
+                            <div class="product-box">
+                                <span class="sale_tag"></span>
+                                <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"><img
+                                        alt="" src="product_files/project_img6.jpg"></a><br>
+                                <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
+                                   class="title">Fusce id molestie massa</a><br>
+                                <a href="#" class="category">Suspendisse aliquet</a>
 
-                                    <p class="price">$261</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="item">
-                        <ul class="thumbnails listing-products">
-                            <li class="span3">
-                                <div class="product-box">
-                                    <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"><img
-                                            alt="" src="product_files/project_img3.jpg"></a><br>
-                                    <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
-                                       class="title">Tempor sem sodales</a><br>
-                                    <a href="#" class="category">Urna nec lectus mollis</a>
+                                <p class="price">$261</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <ul class="thumbnails listing-products">
+                        <li class="span3">
+                            <div class="product-box">
+                                <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"><img
+                                        alt="" src="product_files/project_img3.jpg"></a><br>
+                                <a href="http://www.dichotaigia.com/themes/sale_shop/product_detail.html"
+                                   class="title">Tempor sem sodales</a><br>
+                                <a href="#" class="category">Urna nec lectus mollis</a>
 
-                                    <p class="price">$134</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                <p class="price">$134</p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-        <div class="block">
-            <h4 class="title"><strong>{% trans "Best" %}</strong> {% trans "Seller" %}</h4>
-            <ul class="small-product">
-                <li>
-                    <a href="#" title="Praesent tempor sem sodales">
-                        <img src="product_files/m2.jpg" alt="Praesent tempor sem sodales">
-                    </a>
-                    <a href="#">Praesent tempor sem</a>
-                </li>
-                <li>
-                    <a href="#" title="Luctus quam ultrices rutrum">
-                        <img src="product_files/m4.jpg" alt="Luctus quam ultrices rutrum">
-                    </a>
-                    <a href="#">Luctus quam ultrices rutrum</a>
-                </li>
-                <li>
-                    <a href="#" title="Fusce id molestie massa">
-                        <img src="product_files/m3.jpg" alt="Fusce id molestie massa">
-                    </a>
-                    <a href="#">Fusce id molestie massa</a>
-                </li>
-            </ul>
-        </div>
     </div>
+    <div class="block">
+        <h4 class="title"><strong>{% trans "Best" %}</strong> {% trans "Seller" %}</h4>
+        <ul class="small-product">
+            <li>
+                <a href="#" title="Praesent tempor sem sodales">
+                    <img src="product_files/m2.jpg" alt="Praesent tempor sem sodales">
+                </a>
+                <a href="#">Praesent tempor sem</a>
+            </li>
+            <li>
+                <a href="#" title="Luctus quam ultrices rutrum">
+                    <img src="product_files/m4.jpg" alt="Luctus quam ultrices rutrum">
+                </a>
+                <a href="#">Luctus quam ultrices rutrum</a>
+            </li>
+            <li>
+                <a href="#" title="Fusce id molestie massa">
+                    <img src="product_files/m3.jpg" alt="Fusce id molestie massa">
+                </a>
+                <a href="#">Fusce id molestie massa</a>
+            </li>
+        </ul>
     </div>
-    </section>
+</div>
+</div>
+</section>
 
-    {% addtoblock "css" %}
-        <link href="{{ STATIC_URL }}theme/css/jquery.fancybox.css" rel="stylesheet"/>
-    {% endaddtoblock %}
-    {% addtoblock "js_top" %}
-        <script src="{{ STATIC_URL }}theme/js/jquery.fancybox.js"></script>
-    {% endaddtoblock %}
-    {% addtoblock "js_bottom" %}
-        <script>
-            $(function () {
-                $('#myTab a:first').tab('show');
-                $('#myTab a').click(function (e) {
-                    e.preventDefault();
-                    $(this).tab('show');
-                })
-            })
-            $(document).ready(function () {
-                $('.thumbnail').fancybox({
-                    openEffect: 'none',
-                    closeEffect: 'none'
-                });
+{% addtoblock "css" %}
+<link href="{{ STATIC_URL }}theme/css/jquery.fancybox.css" rel="stylesheet"/>
+{% endaddtoblock %}
+{% addtoblock "js_top" %}
+<script src="{{ STATIC_URL }}theme/js/jquery.fancybox.js"></script>
+{% endaddtoblock %}
+{% addtoblock "js_bottom" %}
+<script>
+    $(function () {
+        $('#myTab a:first').tab('show');
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+        })
+    })
+    $(document).ready(function () {
+        $('.thumbnail').fancybox({
+            openEffect: 'none',
+            closeEffect: 'none'
+        });
 
-                $('#myCarousel-2').carousel({
-                    interval: 2500
-                });
-            });
-        </script>
-    {% endaddtoblock %}
+        $('#myCarousel-2').carousel({
+            interval: 2500
+        });
+    });
+</script>
+{% endaddtoblock %}
 
 {% endblock %}
 
